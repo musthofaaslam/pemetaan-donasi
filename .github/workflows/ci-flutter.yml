@@ -1,0 +1,46 @@
+name: Flutter Mobile CI
+
+on:
+  push:
+    branches: [ main, development ]
+    paths:
+      - 'frontend-flutter/**'     # 🌟 Sesuai folder proyekmu saat ini
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'frontend-flutter/**'
+
+jobs:
+  test-mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend-flutter # 🌟 Masuk ke folder Flutter
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    # 🔴 BERUBAH: Flutter butuh Java untuk build tool Android-nya
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    # 🔴 BERUBAH: Menggunakan action khusus untuk install Flutter SDK
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        
+    # 🔴 BERUBAH: Perintah mengambil library Flutter
+    - name: Install Dependencies
+      run: flutter pub get
+        
+    # 🔴 BERUBAH: Menjalankan analisa kode (cek error/warning)
+    - name: Run Linter Analyze
+      run: flutter analyze
+
+    # 🔴 BERUBAH: Menjalankan unit test Flutter
+    - name: Run Tests
+      run: flutter test

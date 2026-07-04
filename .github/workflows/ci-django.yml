@@ -1,0 +1,34 @@
+name: Django Backend CI
+
+on:
+  push:
+    branches: [ main, development ] # 🌟 Sesuaikan nama branch dengan proyekmu (development)
+    paths:
+      - 'backend-django/**' # 🌟 KUNCINYA DI SINI: Hanya jalan jika folder ini berubah
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'backend-django/**'
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend-django # 🌟 PENTING: Arahkan robot agar masuk ke folder Django dulu
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run Tests
+      run: python manage.py test

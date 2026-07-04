@@ -1,0 +1,35 @@
+name: React Frontend CI
+
+on:
+  push:
+    branches: [ main, development ] # 🌟 Sesuaikan nama branch dengan proyekmu (development)
+    paths:
+      - 'frontend-web/**'         # 🌟 Sesuai folder proyekmu saat ini
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'frontend-web/**'
+
+jobs:
+  test-frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend-web # 🌟 Masuk ke folder React
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    # 🔴 BERUBAH: Menggunakan Node.js, bukan Python
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Menggunakan Node versi LTS terbaru
+        
+    # 🔴 BERUBAH: Perintah install menggunakan npm
+    - name: Install Dependencies
+      run: npm install
+        
+    # 🔴 BERUBAH: Menjalankan test bawaan React/Vite
+    - name: Run Tests
+      run: npm run test:unit # atau 'npm test' tergantung config package.json kamu

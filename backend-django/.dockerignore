@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Database lokal (Supaya DB Docker lokalmu gak naik ke GitHub)
+*.sqlite3
+*.db
+
+# Log files
+*.log
+
+# Unit test / coverage reports
+htmlcov/
+.toml
+.coverage
+.coverage.*
+.hypothesis/
+.pytest_cache/
+
+# Django-specific
+local_settings.py
+db.sqlite3-journal
+
+# Environments (Jika nanti kamu pakai venv tanpa Docker)
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/

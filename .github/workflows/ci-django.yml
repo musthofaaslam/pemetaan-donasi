@@ -2,7 +2,7 @@ name: Django Backend CI
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, development ] # 🌟 Sesuaikan nama branch dengan proyekmu (development)
     paths:
       - 'backend-django/**' # 🌟 KUNCINYA DI SINI: Hanya jalan jika folder ini berubah
   pull_request:

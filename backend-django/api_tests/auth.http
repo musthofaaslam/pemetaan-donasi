@@ -1,0 +1,51 @@
+### Mengirim data pendaftaran pengguna baru (Register User) 
+POST http://127.0.0.1:8000/api/v1/institutions/register/
+Content-Type: application/json
+
+{
+    "name": "user_{{$randomInt 100 999}}",
+    "password": "password123",
+    "email": "tester_{{$guid}}@gmail.com",
+    "legal_sk_number": "SK-{{$randomInt 1000 9999}}",
+    "npwp": "NPWP-{{$randomInt 100000 999999}}",
+    "pub_permit_no": "PERMIT-{{$randomInt 1000 9999}}",
+    "bank_account_no": "ACC-{{$randomInt 100000 999999}}",
+    "bank_name": "Bank {{$randomInt 1 10}}",
+    "bank_account_name": "user_{{$randomInt 100 999}}"
+    }
+
+### Mengirim data pendaftaran pengguna baru (Register User) email sama
+POST http://127.0.0.1:8000/api/v1/institutions/register/
+Content-Type: application/json
+
+{
+    "name": "user_{{$randomInt 100 999}}",
+    "password": "password123",
+    "email": "tester_sama@gmail.com",
+    "legal_sk_number": "SK-{{$randomInt 1000 9999}}",
+    "npwp": "NPWP-{{$randomInt 100000 999999}}",
+    "pub_permit_no": "PERMIT-{{$randomInt 1000 9999}}",
+    "bank_account_no": "ACC-{{$randomInt 100000 999999}}",
+    "bank_name": "Bank {{$randomInt 1 10}}",
+    "bank_account_name": "user_{{$randomInt 100 999}}",
+    "verification_status": "PENDING",
+    "is_frozen": false
+}
+
+### Mengirim data pendaftaran pengguna baru (Register User) nama sama
+POST http://127.0.0.1:8000/api/v1/institutions/register/
+Content-Type: application/json
+
+{
+    "name": "user_123",
+    "password": "password123",
+    "email": "tester_{{$guid}}@gmail.com",
+    "legal_sk_number": "SK-{{$randomInt 1000 9999}}",
+    "npwp": "NPWP-{{$randomInt 100000 999999}}",
+    "pub_permit_no": "PERMIT-{{$randomInt 1000 9999}}",
+    "bank_account_no": "ACC-{{$randomInt 100000 999999}}",
+    "bank_name": "Bank {{$randomInt 1 10}}",
+    "bank_account_name": "user_{{$randomInt 100 999}}",
+    "verification_status": "PENDING",
+    "is_frozen": false
+}

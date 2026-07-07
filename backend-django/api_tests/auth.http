@@ -49,3 +49,21 @@ Content-Type: application/json
     "verification_status": "PENDING",
     "is_frozen": false
 }
+
+### Mengirim data login institusi
+POST http://127.0.0.1:8000/api/v1/institutions/login/
+Content-Type: application/json
+
+{
+    "password": "password123",
+    "email": "tester_sama@gmail.com"
+}
+
+### Mengirim data login institusi password salah
+POST http://127.0.0.1:8000/api/v1/institutions/login/
+Content-Type: application/json
+
+{
+    "password": "passwordsalah",
+    "email": "tester_sama@gmail.com"
+}

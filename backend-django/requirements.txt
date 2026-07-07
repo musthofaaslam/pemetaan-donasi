@@ -5,3 +5,4 @@ djangorestframework>=3.15.1 # Django REST framework for building APIs
 Pillow>=10.2.0 # Image processing library for Python
 python-dotenv>=1.0.1 # Load environment variables from a .env file
 psycopg2-binary>=2.9.9 # PostgreSQL adapter for Python
+djangorestframework-simplejwt==5.5.1 # JSON Web Token authentication for Django REST framework

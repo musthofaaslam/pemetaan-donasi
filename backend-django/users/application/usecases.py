@@ -1,10 +1,10 @@
 from datetime import datetime, timezone
 from typing import Optional
 from users.domain.entities import InstitutionEntity #DonorEntity
-from users.domain.exceptions import InstitutionAlreadyExistException #OTPSpamException
+from users.domain.exceptions import InstitutionAlreadyExistException, InstitutionInvalidCredentialsException #OTPSpamException
 from users.domain.repositories import InstitutionRepositoryInterface #DonorRepositoryInterface
-from django.contrib.auth.hashers import make_password
-
+from django.contrib.auth.hashers import make_password, check_password
+from rest_framework_simplejwt.tokens import RefreshToken
 class RegisterInstitutionUseCase:
     def __init__(self, institution_repo: InstitutionRepositoryInterface):
         # Kita panggil interfacenya, bukan class Django-nya langsung
@@ -45,6 +45,31 @@ class RegisterInstitutionUseCase:
         # 4. Simpan melalui repo kontrak, dan kembalikan entitas hasilnya
         return self.institution_repo.save(new_institution)
 
+class LoginInstitutionUseCase:
+    def __init__(self, institution_repo):
+        self.institution_repo = institution_repo
+        
+    def execute(self, email: str, password: str) -> dict:
+        institution = self.institution_repo.get_by_email(email)
+        
+        if institution is None:
+            raise InstitutionInvalidCredentialsException("Email atau password salah.")
+        
+        if institution.verification_status != 'verified':
+            raise InstitutionInvalidCredentialsException("Institusi belum terverifikasi.")
+        
+        if not check_password(password, institution.password):
+            raise InstitutionInvalidCredentialsException("Email atau password salah.")
+        
+        refresh = RefreshToken()
+        # Masukkan klaim data (payload) ke dalam token untuk Flutter
+        refresh['institution_id'] = institution.id
+        refresh['email'] = institution.email
+
+        return {
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+        }
 
 # class RequestDonorOTPUseCase:
 #     def __init__(self, donor_repo: DonorRepositoryInterface):

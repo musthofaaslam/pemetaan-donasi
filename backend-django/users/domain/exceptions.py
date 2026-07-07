@@ -10,6 +10,10 @@ class InstitutionNotVerifiedException(Exception):
     """Dilemparkan ketika institusi belum diverifikasi oleh admin."""
     pass
 
+class InstitutionInvalidCredentialsException(Exception):
+    """Dilemparkan ketika kredensial login institusi tidak valid."""
+    pass
+
 # class OTPSpamException(Exception):
 #     """Dilemparkan ketika donor meminta OTP terlalu cepat sebelum batas waktu jeda selesai."""
 #     pass

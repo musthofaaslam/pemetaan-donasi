@@ -11,7 +11,10 @@ class RegisterInstitutionSerializer(serializers.Serializer):
     bank_account_no = serializers.CharField(max_length=30)
     bank_name = serializers.CharField(max_length=50)
     bank_account_name = serializers.CharField(max_length=150)
-
+    
+class LoginInstitutionSerializer(serializers.Serializer):
+    email = serializers.EmailField(error_messages={"invalid": "Format email tidak valid."})
+    password = serializers.CharField(write_only=True)
 
 # class RequestOTPSerializer(serializers.Serializer):
 #     # Memastikan input nomor HP dan email dari donor berformat benar

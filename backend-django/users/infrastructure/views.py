@@ -6,14 +6,14 @@ from rest_framework.response import Response
 from rest_framework import status
 
 # Impor dari layer Domain (Use Case & Exceptions)
-from users.application.usecases import RegisterInstitutionUseCase #RequestDonorOTPUseCase
-from users.domain.exceptions import InstitutionAlreadyExistException #OTPSpamException
+from users.application.usecases import RegisterInstitutionUseCase, LoginInstitutionUseCase #RequestDonorOTPUseCase
+from users.domain.exceptions import InstitutionAlreadyExistException, InstitutionInvalidCredentialsException #OTPSpamException
 
 # Impor dari layer Infrastructure (Repository Implementation)
 from users.infrastructure.repositories import DjangoInstitutionRepository #DjangoDonorRepository
 
 # Impor dari layer Presentation (Serializer)
-from .serializers import RegisterInstitutionSerializer #RequestOTPSerializer
+from .serializers import RegisterInstitutionSerializer, LoginInstitutionSerializer #RequestOTPSerializer
 
 
 class RegisterInstitutionView(APIView):
@@ -61,7 +61,40 @@ class RegisterInstitutionView(APIView):
             # Jaga-jaga jika ada error sistem/database yang tidak terduga
             return Response({"error": "Terjadi kesalahan pada sistem."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
+class LoginInstitutionView(APIView):
+    def post(self, request):
+        # 1. Validasi format request HTTP lewat Serializer
+        serializer = LoginInstitutionSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        # 2. Inisialisasi Repository & Use Case (Dependency Injection)
+        institution_repo = DjangoInstitutionRepository()
+        use_case = LoginInstitutionUseCase(institution_repo)
+        
+        # 3. Eksekusi Use Case dan tangkap Exception dari Domain
+        try:
+            result = use_case.execute(
+                email=serializer.validated_data['email'],
+                password=serializer.validated_data['password']
+            )
+            
+            # 4. Berikan respon sukses jika berhasil
+            return Response({
+                "message": "Login berhasil.",
+                "data": {
+                    "access_token": result['access'],
+                    "refresh_token": result['refresh']
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except InstitutionInvalidCredentialsException as e:
+            # Tangkap error aturan bisnis dari domain, ubah jadi HTTP 401 Unauthorized
+            return Response({"error": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            # Jaga-jaga jika ada error sistem/database yang tidak terduga
+            return Response({"error": "Terjadi kesalahan pada sistem."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 # class RequestDonorOTPView(APIView):
 #     def post(self, request):
 #         # 1. Validasi format request HTTP

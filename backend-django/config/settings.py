@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+from datetime import timedelta
 import os
 from pathlib import Path
 
@@ -22,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-secret-key-untuk-dev')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -36,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_simplejwt',
     'users'
 ]
 
@@ -123,3 +126,34 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    # Masa berlaku Access Token (Token untuk akses API, dibuat singkat demi keamanan)
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    
+    # Masa berlaku Refresh Token (Token untuk minta Access Token baru tanpa login ulang)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    
+    # Mengizinkan pembaharuan token secara berkala
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': False,
+
+    # Algoritma enkripsi token
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY, # Menggunakan SECRET_KEY bawaan Django Anda
+
+    # Format Header yang harus dikirim oleh Flutter
+    # Contoh di Flutter: Authorization: Bearer <isi_token>
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    
+    # Field identifikasi dari payload token
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+}
